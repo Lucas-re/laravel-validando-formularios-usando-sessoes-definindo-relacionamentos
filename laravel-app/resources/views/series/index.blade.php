@@ -1,5 +1,5 @@
 <x-layout title="Séries">
-    <a class="btn btn-dark mb-2" href="/series/criar">Adicionar Nova Serie</a>
+    <a class="btn btn-dark mb-2" href="{{route('series.create')}}">Adicionar Nova Serie</a>
     
     <table class="table table-hover">
         <thead>

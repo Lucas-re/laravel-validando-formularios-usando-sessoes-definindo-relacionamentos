@@ -53,9 +53,8 @@ class SeriesController extends Controller
          * Consultas dados utilizando o Eloquent ORM
          */
         // $aSeries = Serie::all();
-        $aSeries = Serie::query()->orderBy('id')->get();
         // $aSeries = Serie::query()->where('nome', 'Arrow')->get();
-        // dd($aSeries);
+        $aSeries = Serie::query()->orderBy('id')->get();
 
 
 
@@ -98,7 +97,50 @@ class SeriesController extends Controller
      */
     public function store(Request $request) 
     {
-        $nomeSerie = $request->input('nome');
+
+        ##### receber dados ########
+
+        /**
+         * Busca somente o campo especificado passado no parametro
+         */
+        //$request->only(['nome']);
+
+
+        /**
+         * Cria uma exceção. Busca todos os campos na requisição
+         * exceto o que foi informado no parametro
+         */
+        //$request->except(['_token']);
+
+
+        /**
+         * pegar o valor acessando o indice do atributo
+         */
+        // $nomeSerie = $request->input('nome');
+
+
+        /**
+         * pegar o valor diretamente do atributo
+         */
+        // $nomeSerie = $request->nome;
+
+
+        /**
+         * Retorna todos os dados da requisição 
+         * em um array associativo.
+         */
+        // $request->all();
+
+
+
+        ###### Incluir ########
+
+        /**
+         * Pega todos os valores da requisição em um array associativo 
+         * e insere utilizando o Mass Asingnment
+         */
+        Serie::create($request->all());
+
 
         /**
          * Insere dados atraves da classe DB
@@ -107,15 +149,39 @@ class SeriesController extends Controller
         // return redirect('/series');
 
 
-
         /**
          * Insere dados atraves do Eloquent ORM 
          */
-        $serie = new Serie();
-        $serie->nome = $nomeSerie;
-        $serie->save();
+        // $serie = new Serie();
+        // $serie->nome = $nomeSerie;
+        // $serie->save();
 
-        return redirect('/series');
+
+        /**
+         * Redirecionamento simples
+         */
+        //return redirect('/series');
+
+
+        /**
+         * Redirecionamento com metodo route
+         * modelo 1
+         */
+        //return redirect()->route('series.index'); 
+
+
+        /**
+         * Redirecionamento com metodo route
+         * modelo 2
+         */
+        //return redirect(route('series.index'));
+
+
+        /**
+         * Redirecionamento com metodo route
+         * modelo 2
+         */
+        return to_route('series.index');
            
     }
 
