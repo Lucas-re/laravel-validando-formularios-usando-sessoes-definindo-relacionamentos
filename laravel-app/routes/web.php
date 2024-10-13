@@ -47,16 +47,27 @@ Route::get('/ola', function () {
 /**
  * Definindo grupo de rotas de outra forma
  */
-// Route::resource('/series', SeriesController::class);
+Route::resource('/series', SeriesController::class)->only(['index', 'create', 'store', 'destroy', 'edit', 'update']);
+
+
+/**
+ * Definido rota para exclusão de serie com metodo POST
+ */
+//Route::post('/series/destroy/{id_serie}', [SeriesController::class, 'destroy'])->name('series.destroy');
+
+/**
+ * Definido rota para exclusão de serie com metodo DELETE
+ */
+// Route::delete('/series/destroy/{id_serie}', [SeriesController::class, 'destroy'])->name('series.destroy');
 
 
 
 /**
  * Nomeando rotas 
  */
-Route::controller(SeriesController::class)->group(function(){
-    Route::get('/series', 'index')->name('series.index');
-    Route::get('/series/criar', 'create')->name('series.create');
-    Route::post('/series/salvar', 'store')->name('series.store');
-    Route::get('/series/excluir', 'excluir');
-});
+// Route::controller(SeriesController::class)->group(function(){
+//     Route::get('/series', 'index')->name('series.index');
+//     Route::get('/series/criar', 'create')->name('series.create');
+//     Route::post('/series/salvar', 'store')->name('series.store');
+//     Route::get('/series/excluir', 'excluir');
+// });

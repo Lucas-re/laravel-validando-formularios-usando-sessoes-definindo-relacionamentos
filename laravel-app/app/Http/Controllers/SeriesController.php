@@ -59,6 +59,26 @@ class SeriesController extends Controller
 
 
         /**
+         * Recupera o dado mensagem de sucesso da sessão com get()
+         */
+        $mensagemSucesso = $request->session()->get('mensagem.sucesso');
+
+
+
+        /**
+         * Recupera o dado mensagem de sucesso da sessão com o helper session
+         */
+        //$mensagemSucesso = session('mensagem.sucesso');
+
+
+
+        /**
+         * remove a mensagem da sessão
+         */
+        $request->session()->forget('mensagem.sucesso');
+
+
+        /**
          * temos essa forma de se retorna para uma view
          */
         
@@ -78,7 +98,7 @@ class SeriesController extends Controller
         /**
          * com o metodo with 
          */
-         return view('series.index')->with('aSeries', $aSeries);
+         return view('series.index')->with('aSeries', $aSeries)->with('mensagemSucesso', $mensagemSucesso);
         
     }
 
@@ -88,7 +108,8 @@ class SeriesController extends Controller
      */
     public function create()
     {
-        return view('series.create');
+        $acao = 'Adicionar';
+        return view('series.create')->with('acao', $acao);
     }
 
 
@@ -139,7 +160,7 @@ class SeriesController extends Controller
          * Pega todos os valores da requisição em um array associativo 
          * e insere utilizando o Mass Asingnment
          */
-        Serie::create($request->all());
+        $serie = Serie::create($request->all());
 
 
         /**
@@ -178,10 +199,17 @@ class SeriesController extends Controller
 
 
         /**
+         * Adiciona à sessão a mensagem de sucesso
+         */
+        //$request->session()->put('mensagem.sucesso',"Serie '{$serie->nome}' adicionada com sucesso");
+
+
+        /**
          * Redirecionamento com metodo route
          * modelo 2
+         * Criando variavel de sessão mensagem de sucesso
          */
-        return to_route('series.index');
+        return to_route('series.index')->with('mensagem.sucesso',"Serie '{$serie->nome}' adicionada com sucesso");
            
     }
 
@@ -189,13 +217,62 @@ class SeriesController extends Controller
     /**
      * 
      */
-    public function excluir(Request $request)
+    public function destroy(Request $request, Serie $series)
     {
-        
-        $idSerie = $request->all();
-        dd($idSerie);
+        /**
+         * Usar dessa forma se for passado o parametro do tipo Request
+         */
+        // $idSerie = $request->series;
+        // $serie = Serie::find($serie);
+        //Serie::destroy($idSerie);
+
+        /**
+         * Usa dessa forma se for passado a classe como tipo
+         */
+        $series->delete();
+
+
+
+        /**
+         * Adiciona na sessão a mensagem de sucesso com put
+         */
+        //$request->session()->put('mensagem.sucesso', "Serie '{$series->nome}' removida com sucesso");
+
+
+
+        /**
+         * Adiciona na sessão a mensagem de sucesso com flash
+         */
+        //$request->session()->flash('mensagem.sucesso', 'Serie removida com sucesso');
+
+
+        /**
+         * Adiciona na sessão a mensagem de sucesso com o helper do laravel session()
+         */
+        // session(['mensagem.sucesso' => 'Serie removida com sucesso']);
+
+
+
+        /**
+         * Redireciona e cria mensagem de sucesso na sessão
+         */
+        return to_route('series.index')->with('mensagem.sucesso', "Serie '{$series->nome}' removida com sucesso");
 
         
        
+    }
+
+    public function edit(Serie $series)
+    {
+        $acao = 'Editar';
+       return view('series.edit')->with('serie', $series)->with('acao', $acao);
+    }
+
+    public function update(Serie $series, Request $request)
+    {
+        $series->nome = $request->nome;
+        $series->save();
+
+        return to_route('series.index')->with('mensagem.sucesso', "Serie '{$series->nome}' atualizada com sucesso");
     }
 }
