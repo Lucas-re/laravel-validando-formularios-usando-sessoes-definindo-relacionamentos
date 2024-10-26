@@ -15,6 +15,11 @@ class SeriesController extends Controller
     public function index(Request $request)
     {
         /**
+         * Usando Escopo local
+         */
+        // $aSeries = Serie::activeSeries()->get();
+
+        /**
          * pega o parametro id passado pela url
          */
         // return $request->get('id');
@@ -55,7 +60,7 @@ class SeriesController extends Controller
          */
         // $aSeries = Serie::all();
         // $aSeries = Serie::query()->where('nome', 'Arrow')->get();
-        $aSeries = Serie::query()->orderBy('id')->get();
+        $aSeries = Serie::with(['temporadas'])->get();
 
 
 
