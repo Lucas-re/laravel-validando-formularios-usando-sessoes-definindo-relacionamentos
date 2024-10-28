@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SeriesFormRequest;
+use App\Models\Episode;
+use App\Models\Season;
 use App\Models\Serie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -60,7 +62,7 @@ class SeriesController extends Controller
          */
         // $aSeries = Serie::all();
         // $aSeries = Serie::query()->where('nome', 'Arrow')->get();
-        $aSeries = Serie::with(['temporadas'])->get();
+        $aSeries = Serie::with(['seasons'])->get();
 
 
 
@@ -124,6 +126,34 @@ class SeriesController extends Controller
      */
     public function store(SeriesFormRequest $request) 
     {
+        // dd($request->all());
+
+        $serie = Serie::create($request->all());
+
+        $aSeasons = [];
+        for ($i = 1; $i <= $request->seasonQty; $i++){
+            $aSeasons[] = [
+                'series_id' => $serie->id,
+                'number' => $i
+            ];
+        }
+        Season::insert($aSeasons);
+
+        $aEpisodes = [];
+        foreach ($serie->seasons as $season){
+
+            for($j = 1; $j <= $request->episodesPerSeason; $j++){
+                $aEpisodes[] = [
+                    'season_id' => $season->id,
+                    'number' => $j
+                ];
+            }
+        }
+        Episode::insert($aEpisodes);
+
+
+            
+        
         /**
          * Valida campo nome diretamente com o Request
          * Esta comentando porque agora ele é validado pelo
@@ -174,7 +204,7 @@ class SeriesController extends Controller
          * Pega todos os valores da requisição em um array associativo 
          * e insere utilizando o Mass Asingnment
          */
-        $serie = Serie::create($request->all());
+        // $serie = Serie::create($request->all());
 
 
         /**

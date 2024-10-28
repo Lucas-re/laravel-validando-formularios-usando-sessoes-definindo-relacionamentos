@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SeasonsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SeriesController;
 
@@ -71,3 +72,5 @@ Route::resource('/series', SeriesController::class)->only(['index', 'create', 's
 //     Route::post('/series/salvar', 'store')->name('series.store');
 //     Route::get('/series/excluir', 'excluir');
 // });
+
+Route::get('/series/{serie}/seasons', [SeasonsController::class, 'index'])->name('seasons.index');
